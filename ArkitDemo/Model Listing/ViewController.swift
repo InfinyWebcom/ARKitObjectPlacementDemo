@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var designCollectionView: UICollectionView!
     
     //MARK: - Class properties
-    
+    #warning("make sure your model name and image names are the same")
     let images = [UIImage(named: "candle"),
                   UIImage(named: "lamp"),
                   UIImage(named: "toy_drummer"),
@@ -33,12 +33,20 @@ class ViewController: UIViewController {
                       "Lowpoly_tree_sample.dae"]
     
     //MARK: - ViewController Events
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         designCollectionView.delegate = self
         designCollectionView.dataSource = self
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        let layout = UICollectionViewFlowLayout()
+        let size = ((self.view.frame.width - 10)/2)
+        layout.itemSize = CGSize(width: size, height: size)
+        layout.minimumInteritemSpacing = 0
+        layout.scrollDirection = .vertical
+        designCollectionView.collectionViewLayout = layout
     }
 }
 
@@ -60,14 +68,8 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let padding: CGFloat =  15
-        let collectionViewSize = designCollectionView.frame.size.width - padding
-        let layout = designCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        layout.sectionInset = UIEdgeInsets(top: 6, left: 4, bottom: 6, right: 4)
-        layout.minimumInteritemSpacing = 15
-        layout.minimumLineSpacing = 20
-        layout.invalidateLayout()
-        return CGSize(width: ((collectionViewSize / 2) - 6), height: ((collectionViewSize / 2) - 6))
+        let size = ((self.view.frame.width - 10)/2)
+        return CGSize(width: size, height: size)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

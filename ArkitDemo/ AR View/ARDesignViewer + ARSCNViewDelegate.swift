@@ -86,7 +86,7 @@ extension ARDesignViewer: ARSCNViewDelegate , ARSessionDelegate{
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
-            self.updateFocusSquare(isObjectVisible: false)
+            self.updateFocusSquare()
         }
     }
     

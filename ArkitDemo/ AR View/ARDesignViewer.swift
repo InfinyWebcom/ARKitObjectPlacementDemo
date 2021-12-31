@@ -33,7 +33,7 @@ class ARDesignViewer: UIViewController {
     var addedNodes = [SCNNode]()
     var panGestureRecognizer = UIPanGestureRecognizer()
     var planeType:ARWorldTrackingConfiguration.PlaneDetection = [.horizontal]
-    
+    var isObjectVisible = false
     //MARK: - ViewController Events
     
     override func viewDidLoad() {
@@ -116,6 +116,7 @@ class ARDesignViewer: UIViewController {
     }
 
     func resetARSession(){
+        isObjectVisible = false
         self.sceneView.session.pause()
         self.sceneView.scene.rootNode.enumerateChildNodes { node, _ in
             if node.name == nodeName{
@@ -138,14 +139,15 @@ class ARDesignViewer: UIViewController {
         configuration.planeDetection = planeType
         session.run(configuration)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            self.updateFocusSquare(isObjectVisible: false)
+            self.updateFocusSquare()
         })
     }
     
     //MARK: - FocusSquare
-    func updateFocusSquare(isObjectVisible: Bool) {
+    func updateFocusSquare() {
         if isObjectVisible || coachingOverlay.isActive {
             focusSquare.hide()
+            return
         } else {
             focusSquare.unhide()
         }
@@ -251,6 +253,7 @@ class ARDesignViewer: UIViewController {
         if let result = hitResults?.first{
             if addedNodes.isEmpty{
                 addModel(x: result.worldTransform.columns.3.x, y: result.worldTransform.columns.3.y, z: result.worldTransform.columns.3.z,fileName: modelName)
+                isObjectVisible = true
             }
             //            print("adding anchor")
             //            let anchor = ARAnchor(name: self.nodeName, transform: result.worldTransform)
